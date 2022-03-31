@@ -26,19 +26,19 @@ class ShoesColorwayModel extends ShoesColorway {
   });
 
   factory ShoesColorwayModel.fromJson(Map<String, dynamic> json) {
-    var shoesSize;
+    List<ShoesSizeModel>? shoesSize;
     if (json['sizes'] != null) {
-      shoesSize = List<ShoesSizeModel>();
+      shoesSize = [];
       json['sizes'].forEach((v) {
-        shoesSize.add(ShoesSizeModel.fromJson(v));
+        shoesSize?.add(ShoesSizeModel.fromJson(v));
       });
     }
 
-    var shoesImage;
+    List<ShoesImageModel>? shoesImage;
     if (json['images'] != null) {
-      shoesImage = List<ShoesImageModel>();
+      shoesImage = [];
       json['images'].forEach((v) {
-        shoesImage.add(ShoesImageModel.fromJson(v));
+        shoesImage?.add(ShoesImageModel.fromJson(v));
       });
     }
 

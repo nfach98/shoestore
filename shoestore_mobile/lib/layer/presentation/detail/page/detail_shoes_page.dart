@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:developer';
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shoestore_mobile/core/constant/constants.dart';
@@ -17,7 +14,7 @@ import 'package:shoestore_mobile/layer/presentation/main/notifier/home_notifier.
 class DetailShoesPage extends StatefulWidget {
   final String id;
 
-  const DetailShoesPage({Key key, this.id}) : super(key: key);
+  const DetailShoesPage({Key? key, required this.id}) : super(key: key);
 
   @override
   _DetailShoesPageState createState() => _DetailShoesPageState();
@@ -28,7 +25,7 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       context.read<DetailShoesNotifier>().getShoes(
         id: widget.id
       );
@@ -42,8 +39,6 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
     final selectedColorway = context.select((DetailShoesNotifier n) => n.selectedColorway);
 
     final exchange = context.select((HomeNotifier n) => n.exchange);
-
-    log(json.encode(exchange));
 
     return Scaffold(
       body: SafeArea(
@@ -108,10 +103,10 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
     );
   }
 
-  Widget _buildBody({Shoes shoes, bool isLoading, int selectedColorway, Exchange exchange}) {
+  Widget _buildBody({Shoes? shoes, required bool isLoading, required int selectedColorway, Exchange? exchange}) {
     if (isLoading) {
       return Shimmer.fromColors(
-        baseColor: Colors.grey[200],
+        baseColor: Colors.grey,
         highlightColor: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,64 +132,63 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildImages(
-          images: shoes.colorways.isEmpty
-            ? shoes.images
-            : shoes.colorways[selectedColorway].images
+          images: shoes != null && shoes.colorways != null && shoes.colorways!.isEmpty
+            ? shoes.images ?? []
+            : shoes!.colorways?[selectedColorway].images ?? []
         ),
 
         SizedBox(height: 12),
         _buildTitle(title: shoes.title),
         SizedBox(height: 4),
-        _buildSubtitle(subtitle: shoes.subtitle),
+        _buildSubtitle(subtitle: shoes.subtitle ?? ''),
 
         SizedBox(height: 8),
         _buildPrice(
-          stringPrice: shoes.price,
+          stringPrice: shoes.price ?? '',
           exchange: exchange
         ),
 
         SizedBox(height: 20),
-        if (shoes.colorways.isNotEmpty) _buildColorways(
-          colorways: shoes.colorways,
+        if (shoes.colorways != null && shoes.colorways!.isEmpty) _buildColorways(
+          colorways: shoes.colorways!,
           selected: selectedColorway
         ),
       ],
     );
   }
 
-  Widget _buildImages({List<ShoesImage> images}) {
+  Widget _buildImages({List<ShoesImage>? images}) {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
         bottom: Radius.circular(20),
       ),
       child: AspectRatio(
         aspectRatio: 1,
-        child: Swiper(
-          physics: BouncingScrollPhysics(),
-          itemCount: images == null ? 3 : images.length,
-          itemBuilder: (_, index) {
-            return images == null
-            ? Image.asset(
-              "assets/images/dummy_shoes.png",
-              fit: BoxFit.cover,
-            )
-            : Image.network(
-              baseUrl + images[index].image,
+        child: CarouselSlider.builder(
+          itemCount: images?.length,
+          itemBuilder: (_, itemIndex, pageIndex) {
+            return images == null && images?[itemIndex].image != null
+              ? Image.asset(
+                "assets/images/dummy_shoes.png",
+                fit: BoxFit.cover,
+              )
+              : Image.network(
+              baseUrl + images![itemIndex].image!,
               fit: BoxFit.cover,
             );
           },
-          autoplay: false,
-          loop: false,
-          pagination: SwiperPagination(
-            alignment: Alignment.bottomCenter,
-            builder: SwiperPagination.dots
-          )
+          options: CarouselOptions(
+            autoPlay: false,
+            enlargeCenterPage: true,
+            viewportFraction: 1.0,
+            aspectRatio: 1.0,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildTitle({String title}) {
+  Widget _buildTitle({String? title}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12),
       child: Text(
@@ -207,7 +201,7 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
     );
   }
 
-  Widget _buildSubtitle({String subtitle}) {
+  Widget _buildSubtitle({String? subtitle}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12),
       child: Text(
@@ -219,22 +213,20 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
     );
   }
 
-  Widget _buildPrice({String stringPrice, Exchange exchange}) {
+  Widget _buildPrice({String? stringPrice, Exchange? exchange}) {
     int price;
 
-    if (stringPrice != null && exchange != null) {
-      if (exchange.rates != null && exchange.rates.isNotEmpty){
-        int euro = int.parse(stringPrice) ~/ exchange.rates[0].rate;
-        price = (euro * exchange.rates[1].rate).toInt();
-      }
-
-      else price = int.parse(stringPrice);
+    if (exchange != null && exchange.rates != null && exchange.rates!.isNotEmpty){
+      int euro = int.parse(stringPrice ?? '0') ~/ exchange.rates![0].rate!;
+      price = (euro * exchange.rates![1].rate!).toInt();
     }
+
+    else price = int.parse(stringPrice ?? '0');
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12),
       child: Text(
-        price == null ? "" : CurrencyConverter.currency(price),
+        CurrencyConverter.currency(price),
         style: TextStyle(
           fontSize: 16,
         ),
@@ -242,8 +234,8 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
     );
   }
 
-  Widget _buildColorways({List<ShoesColorway> colorways, int selected}) {
-    if (colorways == null) colorways = List(6);
+  Widget _buildColorways({List<ShoesColorway?>? colorways, int? selected}) {
+    if (colorways == null) colorways = List.generate(6, (index) => null);
 
     return Container(
       height: 64,
@@ -277,14 +269,14 @@ class _DetailShoesPageState extends State<DetailShoesPage> {
                             width: 2
                           )
                         ),
-                        child: colorways[index] == null || colorways[index].images == null || colorways[index].images.isEmpty
+                        child: colorways?[index]?.images == null || colorways![index]!.images!.isEmpty
                           ? Image.asset(
                             "assets/images/dummy_shoes.png",
                             fit: BoxFit.cover,
                             width: 64,
                           )
                           : Image.network(
-                            baseUrl + colorways[index].images[0].image,
+                            baseUrl + colorways[index]!.images![0].image!,
                             fit: BoxFit.cover,
                             width: 64,
                           ),

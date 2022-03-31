@@ -10,19 +10,19 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  ScrollController scrollController;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       context.read<HomeNotifier>().getAllShoes();
 
       if(currencyFormat.currencySymbol != 'IDR')
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAppBar() {
+  _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -98,9 +98,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildList({List<Shoes> shoes, Exchange exchange, bool isLoading, bool isKeepLoading}) {
-    if ((isLoading && shoes.isEmpty) || shoes == null) {
-      shoes = List(12);
+  Widget _buildList({List<Shoes?>? shoes, Exchange? exchange, required bool isLoading, required bool isKeepLoading}) {
+    if ((isLoading && shoes!.isEmpty) || shoes == null) {
+      shoes = List.generate(12, (index) => null);
     }
 
     return SingleChildScrollView(
@@ -121,19 +121,19 @@ class _HomePageState extends State<HomePage> {
               ),
               itemCount: shoes.length,
               itemBuilder: (_, index) {
-                return shoes[index] == null
+                return shoes?[index] == null
                   ? Shimmer.fromColors(
-                    baseColor: Colors.grey[200],
+                    baseColor: Colors.grey,
                     highlightColor: Colors.white,
                     child: ItemShoes()
                   )
                   : ItemShoes(
-                    shoes: shoes[index],
+                    shoes: shoes![index]!,
                     exchangeRates: exchange != null ? exchange.rates : null,
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => DetailShoesPage(
-                        id: shoes[index].id,
+                        id: shoes?[index]?.id ?? '',
                       ))
                     ),
                   );

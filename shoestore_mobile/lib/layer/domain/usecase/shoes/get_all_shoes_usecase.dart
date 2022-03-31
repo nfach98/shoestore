@@ -21,12 +21,12 @@ class GetAllShoesUsecase extends UseCase<List<Shoes>, GetAllShoesParams> {
 }
 
 class GetAllShoesParams extends Equatable {
-  final int page;
-  final String category;
-  final String sort;
+  final int? page;
+  final String? category;
+  final String? sort;
 
   GetAllShoesParams({this.page, this.category, this.sort});
 
   @override
-  List<Object> get props => [page, category, sort];
+  List<Object?> get props => [page, category, sort];
 }

@@ -16,13 +16,13 @@ class ExchangeModel extends Exchange {
   });
 
   factory ExchangeModel.fromJson(Map<String, dynamic> json) {
-    var rates = [];
+    List<ExchangeRateModel>? rates;
 
     if (json['rates'] != null) {
-      rates = List<ExchangeRateModel>();
       Map<String, dynamic> jsonRates = json['rates'];
+      rates = [];
       jsonRates.entries.forEach((e) {
-        rates.add(ExchangeRateModel(
+        rates?.add(ExchangeRateModel(
           currency: e.key,
           rate: e.value
         ));

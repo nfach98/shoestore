@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shoestore_mobile/core/constant/constants.dart';
 import 'package:shoestore_mobile/core/util/currency_converter.dart';
@@ -8,11 +7,11 @@ import 'package:shoestore_mobile/layer/domain/entity/shoes.dart';
 import 'package:shoestore_mobile/layer/domain/entity/shoes_colorway.dart';
 
 class ItemShoes extends StatefulWidget {
-  final Shoes shoes;
-  final List<ExchangeRate> exchangeRates;
-  final Function onPressed;
+  final Shoes? shoes;
+  final List<ExchangeRate>? exchangeRates;
+  final Function()? onPressed;
 
-  const ItemShoes({Key key, this.shoes, this.exchangeRates, this.onPressed}) : super(key: key);
+  const ItemShoes({Key? key, this.shoes, this.exchangeRates, this.onPressed}) : super(key: key);
 
   @override
   _ItemShoesState createState() => _ItemShoesState();
@@ -39,7 +38,7 @@ class _ItemShoesState extends State<ItemShoes> {
   Widget _buildImage() {
     return AspectRatio(
       aspectRatio: 1,
-      child: widget.shoes == null || widget.shoes.image == null
+      child: widget.shoes == null || widget.shoes?.image == null
         ? ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(12)),
           child: Image.asset(
@@ -51,7 +50,7 @@ class _ItemShoesState extends State<ItemShoes> {
         : ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(12)),
           child: CachedNetworkImage(
-            imageUrl: baseUrl + widget.shoes.image,
+            imageUrl: baseUrl + (widget.shoes?.image ?? ''),
             placeholder: (_, value) => Image.asset(
               'assets/images/shoestore_no_image.png',
               width: double.infinity,
@@ -65,14 +64,14 @@ class _ItemShoesState extends State<ItemShoes> {
   }
 
   Widget _buildInfo() {
-    int price;
+    int? price;
     if (widget.shoes != null) {
-      if (widget.exchangeRates != null && widget.exchangeRates.isNotEmpty){
-        int euro = int.parse(widget.shoes.price) ~/ widget.exchangeRates[0].rate;
-        price = (euro * widget.exchangeRates[1].rate).toInt();
+      if (widget.exchangeRates != null && widget.exchangeRates!.isNotEmpty){
+        int euro = int.parse((widget.shoes?.price ?? '0')) ~/ widget.exchangeRates![0].rate!;
+        price = (euro * widget.exchangeRates![1].rate!).toInt();
       }
 
-      else price = int.parse(widget.shoes.price);
+      else price = int.parse((widget.shoes?.price ?? '0'));
     }
 
     return Container(
@@ -81,7 +80,7 @@ class _ItemShoesState extends State<ItemShoes> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.shoes == null ? "" : widget.shoes.title,
+            widget.shoes?.title ?? '',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -92,7 +91,7 @@ class _ItemShoesState extends State<ItemShoes> {
 
           SizedBox(height: 4),
           Text(
-            widget.shoes == null ? "" : widget.shoes.subtitle,
+            widget.shoes?.subtitle ?? '',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -100,8 +99,8 @@ class _ItemShoesState extends State<ItemShoes> {
             ),
           ),
 
-          if(widget.shoes != null && widget.shoes.colorways.isNotEmpty)
-            _buildColorways(colorways: widget.shoes.colorways),
+          if(widget.shoes != null && widget.shoes?.colorways != null && widget.shoes!.colorways!.isNotEmpty)
+            _buildColorways(colorways: widget.shoes!.colorways!),
 
           SizedBox(height: 12),
           Text(
@@ -118,7 +117,7 @@ class _ItemShoesState extends State<ItemShoes> {
     );
   }
 
-  Widget _buildColorways({List<ShoesColorway> colorways}) {
+  Widget _buildColorways({required List<ShoesColorway> colorways}) {
     return Text(
       "${colorways.length} colours",
       maxLines: 1,

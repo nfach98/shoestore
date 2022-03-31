@@ -9,8 +9,8 @@ class HomeNotifier with ChangeNotifier {
   final GetExchangeUsecase _exchangeUsecase;
 
   HomeNotifier({
-    @required GetAllShoesUsecase allShoesUsecase,
-    @required GetExchangeUsecase exchangeUsecase,
+    required GetAllShoesUsecase allShoesUsecase,
+    required GetExchangeUsecase exchangeUsecase,
   })  : _allShoesUsecase = allShoesUsecase,
         _exchangeUsecase = exchangeUsecase;
 
@@ -19,9 +19,9 @@ class HomeNotifier with ChangeNotifier {
   bool isKeepLoadingShoes = true;
   int pageShoes = 1;
 
-  Exchange exchange;
+  Exchange? exchange;
 
-  Future<void> getAllShoes({String category, String sort}) async {
+  Future<void> getAllShoes({String? category, String? sort}) async {
     isLoadingShoes = true;
     notifyListeners();
 
@@ -49,7 +49,7 @@ class HomeNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getExchange({String symbol1, String symbol2}) async {
+  Future<void> getExchange({required String symbol1, required String symbol2}) async {
     final result = await _exchangeUsecase(GetExchangeParams(
       symbol1: symbol1,
       symbol2: symbol2

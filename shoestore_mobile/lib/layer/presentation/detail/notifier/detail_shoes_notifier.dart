@@ -6,15 +6,15 @@ class DetailShoesNotifier with ChangeNotifier {
   final GetDetailShoesUsecase _detailShoesUsecase;
 
   DetailShoesNotifier({
-    @required GetDetailShoesUsecase detailShoesUsecase,
+    required GetDetailShoesUsecase detailShoesUsecase,
   })  : _detailShoesUsecase = detailShoesUsecase;
 
-  Shoes shoes;
+  Shoes? shoes;
   bool isLoadingShoes = true;
 
   int selectedColorway = 0;
 
-  Future<void> getShoes({String id}) async {
+  Future<void> getShoes({required String id}) async {
     isLoadingShoes = true;
     notifyListeners();
 

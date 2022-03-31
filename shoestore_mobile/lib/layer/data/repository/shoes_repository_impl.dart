@@ -21,7 +21,7 @@ class ShoesRepositoryImpl extends ShoesRepository {
 
 
   @override
-  Future<Either<Failure, List<Shoes>>> getAll({required int page, required String category, required String sort}) async {
+  Future<Either<Failure, List<Shoes>>> getAll({int? page, String? category, String? sort}) async {
     return await _getListShoes(() {
       return remoteDataSource.getAll(
         page: page,

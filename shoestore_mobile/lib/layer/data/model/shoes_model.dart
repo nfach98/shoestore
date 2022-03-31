@@ -35,27 +35,27 @@ class ShoesModel extends Shoes {
   });
 
   factory ShoesModel.fromJson(Map<String, dynamic> json) {
-    var shoesColorway;
+    List<ShoesColorwayModel>? shoesColorway;
     if (json['colorways'] != null) {
-      shoesColorway = List<ShoesColorwayModel>();
+      shoesColorway = [];
       json['colorways'].forEach((v) {
-        shoesColorway.add(ShoesColorwayModel.fromJson(v));
+        shoesColorway?.add(ShoesColorwayModel.fromJson(v));
       });
     }
 
-    var sizes;
+    List<ShoesSizeModel>? sizes;
     if (json['sizes'] != null) {
-      sizes = List<ShoesSizeModel>();
+      sizes = [];
       json['sizes'].forEach((v) {
-        sizes.add(ShoesSizeModel.fromJson(v));
+        sizes?.add(ShoesSizeModel.fromJson(v));
       });
     }
 
-    var images;
+    List<ShoesImageModel>? images;
     if (json['images'] != null) {
-      images = List<ShoesImageModel>();
+      images = [];
       json['images'].forEach((v) {
-        images.add(ShoesImageModel.fromJson(v));
+        images?.add(ShoesImageModel.fromJson(v));
       });
     }
 

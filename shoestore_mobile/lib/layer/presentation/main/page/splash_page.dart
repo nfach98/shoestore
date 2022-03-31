@@ -5,7 +5,7 @@ import 'package:shoestore_mobile/core/constant/constants.dart';
 import 'package:shoestore_mobile/layer/presentation/main/page/home_page.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({Key key}) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();
