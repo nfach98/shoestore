@@ -1,0 +1,50 @@
+name: mobile
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  #core
+  connectivity_plus: ^2.0.2
+  dartz: ^0.10.0
+  equatable: ^2.0.3
+  get_it: ^7.2.0
+  http: ^0.13.4
+  intl: ^0.17.0
+  provider: ^6.0.1
+
+  #view
+  cached_network_image: ^3.2.0
+  carousel_slider: ^4.0.0
+  flutter_screenutil: ^5.5.2
+  shimmer: ^2.0.0
+  waterfall_flow: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.10.0
+
+flutter_icons:
+  android: true
+  image_path: "assets/images/shoestore_icon.png"
+  ios: true
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/images/
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
