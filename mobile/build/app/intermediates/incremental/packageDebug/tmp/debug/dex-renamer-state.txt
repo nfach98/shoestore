@@ -1,4 +1,0 @@
-#Wed Aug 10 17:22:00 ICT 2022
-base.0=C\:\\Users\\Lenovo\\Documents\\2022\\shoestore\\mobile\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
