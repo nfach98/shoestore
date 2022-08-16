@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mobile/common/config/theme.dart';
+import 'package:mobile/module/home/presentation/notifier/home_notifier.dart';
 import 'package:mobile/routes.dart';
+import 'package:provider/provider.dart';
 import 'common/constant/route_constants.dart';
+import 'injection_container.dart';
 
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'shoestore',
-      initialRoute: RouteConstants.splash,
-      onGenerateInitialRoutes: (String initialRouteName) {
-        return [
-          AppRouter().onGenerateRoute(RouteSettings(name: initialRouteName)),
-        ];
-      },
-      onGenerateRoute: AppRouter().onGenerateRoute,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<HomeNotifier>(
+          create: (_) => sl<HomeNotifier>(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'shoestore',
+        initialRoute: RouteConstants.splash,
+        theme: AppTheme.theme,
+        onGenerateInitialRoutes: (String initialRouteName) {
+          return [
+            AppRouter().onGenerateRoute(RouteSettings(name: initialRouteName)),
+          ];
+        },
+        onGenerateRoute: AppRouter().onGenerateRoute,
+      ),
     );
   }
 }

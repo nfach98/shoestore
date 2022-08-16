@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/common/config/theme.dart';
 import 'package:mobile/common/constant/route_constants.dart';
 import 'package:mobile/common/utils/extensions.dart';
 
@@ -25,12 +26,12 @@ class _SplashPageState extends State<SplashPage> {
         Container(
           width: context.screenWidth,
           height: context.screenHeight,
-          color: Colors.black,
+          color: ColorsTheme.primary,
         ),
         Center(
           child: Image.asset(
             'assets/images/shoestore_logo_long.png',
-            width: context.screenWidth * 0.7,
+            width: context.screenWidth * .7,
             fit: BoxFit.cover,
             color: Colors.white,
           ),

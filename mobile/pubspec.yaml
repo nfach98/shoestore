@@ -14,6 +14,7 @@ dependencies:
 
   #core
   connectivity_plus: ^2.0.2
+  dio: ^4.0.6
   dartz: ^0.10.0
   equatable: ^2.0.3
   get_it: ^7.2.0
