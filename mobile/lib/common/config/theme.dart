@@ -8,10 +8,36 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: ColorsTheme.white,
     primaryColor: ColorsTheme.primary,
+    textTheme: TextTheme(
+      headline4: TextStyle(
+        fontSize: 20,
+        color: ColorsTheme.black,
+        fontWeight: FontWeight.bold,
+      ),
+      headline5: TextStyle(
+        fontSize: 16,
+        color: ColorsTheme.black,
+        fontWeight: FontWeight.bold,
+      ),
+      headline6: TextStyle(
+        fontSize: 12,
+        color: ColorsTheme.black,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
   );
 }
 
 class ColorsTheme {
   static Color white = Color(0xFFebebeb);
+  static Color black = Color(0xff232323);
   static Color primary = Color(0xff002859);
+}
+
+class TextStylesTheme {
+  static TextStyle textTitleCard = TextStyle(
+    fontSize: 16,
+    color: ColorsTheme.black,
+    fontWeight: FontWeight.bold,
+  );
 }

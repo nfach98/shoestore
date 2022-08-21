@@ -7,7 +7,7 @@ import '../constant/api_path_constants.dart';
 
 Dio createDio() {
   Dio dio = Dio(BaseOptions(
-      baseUrl: ApiPathConstants.baseUrl,
+      baseUrl: ApiPathConstants.baseApiUrl,
       connectTimeout: 20000,
       sendTimeout: 20000,
       receiveTimeout: 20000,
