@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/common/constant/route_constants.dart';
 import 'package:mobile/common/utils/currency_formatter.dart';
 import 'package:mobile/common/utils/extensions.dart';
+import 'package:mobile/module/detail/presentation/arguments/detail_page_arguments.dart';
 import 'package:mobile/module/home/presentation/notifier/home_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,105 +45,157 @@ class _HomePageState extends State<HomePage> {
     bool isKeepLoadingShoes = context.select((HomeNotifier n) =>
     n.isKeepLoadingShoes);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(
-          'assets/images/shoestore_logo_long.png',
-          width: context.screenWidth * .4,
-          fit: BoxFit.cover,
-          color: ColorsTheme.primary,
+    bool isSearch = context.select((HomeNotifier n) => n.isSearch);
+
+    return WillPopScope(
+      onWillPop: () async {
+        if (isSearch) {
+          context.read<HomeNotifier>().setSearch(false);
+          context.read<HomeNotifier>().setSearchQuery(null).whenComplete(() {
+            context.read<HomeNotifier>().getShoes();
+          });
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: isSearch
+            ? TextField(
+              onChanged: (value) {
+                context.read<HomeNotifier>().setSearchQuery(value).whenComplete(() {
+                  context.read<HomeNotifier>().getShoes();
+                });
+              },
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    context.read<HomeNotifier>().setSearch(false);
+                    context.read<HomeNotifier>().setSearchQuery(null).whenComplete(() {
+                      context.read<HomeNotifier>().getShoes();
+                    });
+                  },
+                  icon: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                        Icons.clear
+                    ),
+                  ),
+                ),
+              ),
+              style: Theme.of(context).textTheme.bodyText1,
+            )
+            : Image.asset(
+              'assets/images/shoestore_logo_long.png',
+              width: context.screenWidth * .4,
+              fit: BoxFit.cover,
+              color: ColorsTheme.primary,
+            ),
+          actions: isSearch
+            ? []
+            : [
+              IconButton(
+                onPressed: () {
+                  context.read<HomeNotifier>().setSearch(true);
+                },
+                icon: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Image.asset(
+                    'assets/images/icon_search.png',
+                    fit: BoxFit.cover,
+                    color: ColorsTheme.primary,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Image.asset(
+                    'assets/images/icon_cart.png',
+                    fit: BoxFit.cover,
+                    color: ColorsTheme.primary,
+                  ),
+                ),
+              )
+            ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image.asset(
-                'assets/images/icon_search.png',
-                fit: BoxFit.cover,
-                color: ColorsTheme.primary,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image.asset(
-                'assets/images/icon_cart.png',
-                fit: BoxFit.cover,
-                color: ColorsTheme.primary,
-              ),
-            ),
-          )
-        ],
-      ),
-      body: LayoutBuilder(
-        builder: (_, constraint) {
-          if (isLoadingShoes && listShoes.isEmpty) {
-            return WaterfallFlow.builder(
-              gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              itemCount: 12,
-              itemBuilder: (_, index) =>
-                  Shimmer.fromColors(
-                    highlightColor: Colors.grey.shade300,
-                    baseColor: Colors.grey.shade200,
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Column(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: Image.asset(
-                                  'assets/images/shoestore_no_image.png',
-                                  fit: BoxFit.contain,
-                                ),
+        body: LayoutBuilder(
+          builder: (_, constraint) {
+            if (isLoadingShoes && listShoes.isEmpty) {
+              return WaterfallFlow.builder(
+                gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemCount: 12,
+                itemBuilder: (_, index) => Shimmer.fromColors(
+                  highlightColor: Colors.grey.shade300,
+                  baseColor: Colors.grey.shade200,
+                  child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Column(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.asset(
+                                'assets/images/shoestore_no_image.png',
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
-                          SizedBox(height: 12.0),
-                          Container(
-                            width: double.infinity,
-                            height: 28.0,
-                            decoration: BoxDecoration(
-                              color: ColorsTheme.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
+                        ),
+                        SizedBox(height: 12.0),
+                        Container(
+                          width: double.infinity,
+                          height: 28.0,
+                          decoration: BoxDecoration(
+                            color: ColorsTheme.white,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          SizedBox(height: 12.0),
-                          Container(
-                            width: double.infinity,
-                            height: 20.0,
-                            decoration: BoxDecoration(
-                              color: ColorsTheme.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
+                        ),
+                        SizedBox(height: 12.0),
+                        Container(
+                          width: double.infinity,
+                          height: 20.0,
+                          decoration: BoxDecoration(
+                            color: ColorsTheme.white,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-            );
-          } else if (!isLoadingShoes && listShoes.isEmpty) {
-            return Center(child: Text('empty'));
-          }
+                ),
+              );
+            } else if (!isLoadingShoes && listShoes.isEmpty) {
+              return Center(child: Text('empty'));
+            }
 
-          return SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                WaterfallFlow.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: listShoes.length,
-                  itemBuilder: (_, index) =>
-                      Padding(
+            return SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  WaterfallFlow.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2
+                    ),
+                    itemCount: listShoes.length,
+                    itemBuilder: (_, index) => InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RouteConstants.detail,
+                          arguments: DetailPageArguments(
+                            id: listShoes[index].id ?? ''
+                          ),
+                        );
+                      },
+                      child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,11 +206,11 @@ class _HomePageState extends State<HomePage> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12.0),
                                   child: listShoes[index].image == null
-                                  ? Image.asset(
+                                      ? Image.asset(
                                     'assets/images/shoestore_no_image.png',
                                     fit: BoxFit.cover,
                                   )
-                                  : CachedNetworkImage(
+                                      : CachedNetworkImage(
                                     imageUrl: '${ApiPathConstants.baseUrl}'
                                         '${listShoes[index].image}',
                                     fit: BoxFit.cover,
@@ -191,17 +245,19 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                ),
-                if (isKeepLoadingShoes) Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: CircularProgressIndicator(
-                    color: ColorsTheme.primary,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  if (isKeepLoadingShoes) Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: CircularProgressIndicator(
+                      color: ColorsTheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

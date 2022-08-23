@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/common/config/theme.dart';
+import 'package:mobile/module/detail/presentation/notifier/detail_notifier.dart';
 import 'package:mobile/module/home/presentation/notifier/home_notifier.dart';
 import 'package:mobile/routes.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,9 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<HomeNotifier>(
           create: (_) => sl<HomeNotifier>(),
+        ),
+        ChangeNotifierProvider<DetailNotifier>(
+          create: (_) => sl<DetailNotifier>(),
         ),
       ],
       child: MaterialApp(

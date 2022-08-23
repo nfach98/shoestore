@@ -8,15 +8,18 @@ use App\Models\Shoes;
 
 class ShoesController extends Controller
 {
-    public function get_shoes() {
-        $shoes = $shoes = Shoes::select("shoes.id", "shoes.id_category", "categories.name AS name_category", "shoes.title", "shoes.subtitle", "shoes.price", "shoes.discount", "shoes.description", DB::raw("(SELECT image FROM images WHERE shoes.id = images.id_shoes LIMIT 1) AS image"), "shoes.created_at")
+    public function get_shoes(Request $request) {
+        $shoes = Shoes::select("shoes.id", "shoes.id_category", "categories.name AS name_category", "shoes.title", "shoes.subtitle", "shoes.price", "shoes.discount", "shoes.description", DB::raw("(SELECT image FROM images WHERE shoes.id = images.id_shoes LIMIT 1) AS image"), "shoes.created_at")
     	->join('categories', 'shoes.id_category', '=', 'categories.id')
         ->with('colorways', 'colorways.sizes', 'colorways.images')
-        ->with('sizes', 'images')
-        ->paginate(12);
+        ->with('sizes', 'images');
+
+        if ($request->get('search')) {
+            $shoes = $shoes->where('title', 'like', '%' . $request->get('search') . '%');
+        }
 
         return response()->json([
-            'shoes' => $shoes
+            'shoes' => $shoes->paginate(12)
         ]);
     }
 

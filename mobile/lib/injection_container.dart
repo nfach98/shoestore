@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/module/home/di/dependency.dart';
 
 import 'common/config/dio_config.dart';
+import 'module/detail/di/dependency.dart';
 
 final sl = GetIt.instance;
 
@@ -20,4 +21,5 @@ abstract class IconfigureDependencies {
 Future configureDependencies() async {
   sl.registerLazySingleton(() => createDio());
   InjectDependencyHome().inject();
+  InjectDependencyDetail().inject();
 }

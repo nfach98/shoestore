@@ -3,26 +3,23 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:mobile/common/errors/app_error.dart';
-import 'package:mobile/module/home/data/datasources/home_remote_data_source.dart';
-import 'package:mobile/module/home/data/mappers/home_mapper.dart';
-import 'package:mobile/module/home/domain/entities/get_shoes_entity.dart';
-import 'package:mobile/module/home/domain/repositories/home_repository.dart';
+import 'package:mobile/module/detail/data/datasources/detail_remote_data_source.dart';
+import 'package:mobile/module/detail/data/mappers/detail_mapper.dart';
+import 'package:mobile/module/detail/domain/entities/get_shoes_detail_entity.dart';
 
 import '../../../../common/errors/socket_error.dart';
+import '../../domain/repositories/detail_repository.dart';
 
-class HomeRepositoryImpl implements HomeRepository {
-  final HomeRemoteDataSource _remoteDataSource;
+class DetailRepositoryImpl implements DetailRepository {
+  final DetailRemoteDataSource _remoteDataSource;
 
-  HomeRepositoryImpl(this._remoteDataSource);
+  DetailRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<AppError, GetShoesEntity>> getShoes({int? page, String? search}) async {
+  Future<Either<AppError, GetShoesDetailEntity>> getShoesDetail({required String id}) async {
     try {
-      final result = await _remoteDataSource.getShoes(
-        page: page,
-        search: search,
-      );
-      return Right(HomeMapper.toGetShoesEntity(result));
+      final result = await _remoteDataSource.getShoesDetail(id: id);
+      return Right(DetailMapper.toGetShoesDetailEntity(result));
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout ||
           e.type == DioErrorType.sendTimeout ||

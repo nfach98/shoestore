@@ -4,9 +4,6 @@ class ApiPathConstants {
   static const String baseUrl = 'https://shoestore.ninofachrurozy.com/';
   static const String baseApiUrl = '${baseUrl}api';
 
-  static String getShoes({int? page}) {
-    return page == null
-      ? '/shoes'
-      : '/shoes?page=$page';
-  }
+  static String getShoes = '/shoes';
+  static String getShoesDetail = '/shoes-detail';
 }

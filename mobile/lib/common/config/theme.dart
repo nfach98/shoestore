@@ -24,6 +24,14 @@ class AppTheme {
         color: ColorsTheme.black,
         fontWeight: FontWeight.bold,
       ),
+      bodyText1: TextStyle(
+        fontSize: 16,
+        color: ColorsTheme.black,
+      ),
+      bodyText2: TextStyle(
+        fontSize: 12,
+        color: ColorsTheme.black,
+      ),
     ),
   );
 }

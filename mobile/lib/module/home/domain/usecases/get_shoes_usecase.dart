@@ -10,12 +10,16 @@ class GetShoesUsecase {
   GetShoesUsecase(this._repository);
 
   Future<Either<AppError, GetShoesEntity>> execute(GetShoesParams params) {
-    return _repository.getShoes(page: params.page);
+    return _repository.getShoes(
+      page: params.page,
+      search: params.search,
+    );
   }
 }
 
 class GetShoesParams {
   final int? page;
+  final String? search;
 
-  GetShoesParams({this.page});
+  GetShoesParams({this.page, this.search});
 }
